@@ -9,14 +9,22 @@ jobs:
   build:
     runs-on: windows-latest
 
+    permissions:
+      contents: read
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - name: Install Flutter
+      - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
           channel: stable
+
+      - name: Enable Windows desktop
+        run: flutter config --enable-windows-desktop
 
       - name: Get dependencies
         run: flutter pub get
@@ -24,7 +32,7 @@ jobs:
       - name: Build Windows app
         run: flutter build windows
 
-      - name: Upload EXE
+      - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: windows-build
