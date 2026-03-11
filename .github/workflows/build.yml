@@ -1,0 +1,31 @@
+name: Build Windows EXE
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Build Windows app
+        run: flutter build windows
+
+      - name: Upload EXE
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-build
+          path: build/windows/x64/runner/Release
